@@ -14,8 +14,6 @@ export const App: React.FC = () => {
   const [status, setStatus] = useState<string>(STATUSES.ALL);
   const [query, setQuery] = useState<string>('');
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
-  // const [isLoading, setIsLoading] = useState(true);
-console.log('selectedTodo', selectedTodo);
 
   useEffect(() => {
     getTodos().then(res => setTodoList(res));
@@ -37,8 +35,11 @@ console.log('selectedTodo', selectedTodo);
 
   const getTodoList = () => {
     const list = filteredTodoListByStatus();
+
     if (query) {
-      return list.filter((item) => item.title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
+      return list.filter(item =>
+        item.title.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+      );
     } else {
       return list;
     }
@@ -60,12 +61,20 @@ console.log('selectedTodo', selectedTodo);
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter setStatus={setStatus} query={query} setQuery={setQuery} />
+              <TodoFilter
+                setStatus={setStatus}
+                query={query}
+                setQuery={setQuery}
+              />
             </div>
 
             <div className="block">
               {todoList.length ? (
-                <TodoList todoList={getTodoList()} onSelectTodo={handleSelectTodo} selectedTodo={selectedTodo}/>
+                <TodoList
+                  todoList={getTodoList()}
+                  onSelectTodo={handleSelectTodo}
+                  selectedTodo={selectedTodo}
+                />
               ) : (
                 <Loader />
               )}
@@ -74,9 +83,7 @@ console.log('selectedTodo', selectedTodo);
         </div>
       </div>
 
-      {selectedTodo && (
-        <TodoModal todo={selectedTodo} onClose={closeModal} />
-      )}
+      {selectedTodo && <TodoModal todo={selectedTodo} onClose={closeModal} />}
     </>
   );
 };

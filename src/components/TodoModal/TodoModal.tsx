@@ -3,33 +3,41 @@ import { Loader } from '../Loader';
 import { Todo } from '../../types/Todo';
 import { User } from '../../types/User';
 import { getUser } from '../../api';
+
 type Props = {
-  todo: Todo,
-  onClose: () => void,
-}
-export const TodoModal: React.FC<Props> = (props) => {
+  todo: Todo;
+  onClose: () => void;
+};
+
+export const TodoModal: React.FC<Props> = props => {
   const { todo, onClose } = props;
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setIsLoading(true);
     getUser(todo.userId)
-      .then((data) => {
+      .then(data => {
         setUser(data);
       })
       .finally(() => {
         setIsLoading(false);
-      })
-  }, []);
+      });
+  }, [todo.userId]);
   useEffect(() => {
     const onEscapeClick = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === 'Escape') {
+        onClose();
+      }
     };
-    document.addEventListener("keyup", onEscapeClick);
+
+    document.addEventListener('keyup', onEscapeClick);
+
     return () => {
-      document.removeEventListener("keyup", onEscapeClick);
-    }
+      document.removeEventListener('keyup', onEscapeClick);
+    };
   }, [onClose]);
+
   return (
     <div className="modal is-active" data-cy="modal">
       <div className="modal-background" />
@@ -63,9 +71,7 @@ export const TodoModal: React.FC<Props> = (props) => {
                 <strong className="has-text-danger">Planned</strong>
               )}
               {' by '}
-              {user && (
-                <a href={user.email}>{user.name}</a>
-              )}
+              {user && <a href={user.email}>{user.name}</a>}
             </p>
           </div>
         </div>
